@@ -1,0 +1,43 @@
+services:
+  - type: web
+    name: okeyo-analytics-backend
+    runtime: python
+    region: oregon
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: DEBUG
+        value: "false"
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "30"
+      - key: REFRESH_TOKEN_EXPIRE_DAYS
+        value: "7"
+      - key: DEFAULT_CURRENCY
+        value: KES
+      - key: CURRENCY_SYMBOL
+        value: KES
+      - key: UPLOAD_DIR
+        value: /tmp/uploads
+      - key: REPORTS_DIR
+        value: /tmp/reports
+      - key: MAX_UPLOAD_SIZE_MB
+        value: "50"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_ORIGINS
+        value: "*"
+      - key: ANTHROPIC_API_KEY
+        sync: false
+
+databases:
+  - name: okeyo-analytics-db
+    databaseName: okeyo_analytics
+    user: okeyo
+    region: oregon
+    plan: free
